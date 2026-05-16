@@ -1,0 +1,2 @@
+LOOKBACK_PERIOD = "6mo"
+MIN_PRICE = 2
