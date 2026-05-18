@@ -1,32 +1,13 @@
-import time
+import os
+from flask import Flask
 
-from analyzer import analyze_stock
-from telegram_alerts import send_alert
-from alert_state import sent_alerts
+app = Flask(__name__)
 
-stocks = [
-    "AAPL","MSFT","TSLA","NVDA","AMZN","META","AMD","GOOGL",
-    "NFLX","PLTR","INTC","BABA","ORCL","SPY","QQQ"
-]
+@app.route("/")
+def home():
+    return "Render is working"
 
-print("🚀 Engine started... running every 5 minutes")
+print("STARTING SERVER")
 
-while True:
-
-    for s in stocks:
-        r = analyze_stock(s)
-
-        if r:
-            key = f"{r['Symbol']}_{r['Decision']}"
-
-            if r["Decision"] == "STRONG BUY" and key not in sent_alerts:
-                send_alert(
-                    f"🚨 STRONG BUY\n"
-                    f"{r['Symbol']}\n"
-                    f"Price: {r['Price']}\n"
-                    f"Score: {r['Score']}"
-                )
-                sent_alerts.add(key)
-
-    print("✅ Cycle done. Sleeping 5 minutes...")
-    time.sleep(300)  # 5 minutes
+port = int(os.environ.get("PORT", 10000))
+app.run(host="0.0.0.0", port=port)
